@@ -1,34 +1,44 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <cmath>
 using namespace std;
+#define ll long long
 
+ll minWeightDifference(ll idx, ll currDiff, ll totalWeight, vector<ll> &weights)
+{
+    if (idx == 0)
+    {
+        return abs(totalWeight - 2 * currDiff);
+    }
+
+    // Include the current weight in the first group
+    ll diff1 = minWeightDifference(idx - 1, currDiff + weights[idx - 1], totalWeight, weights);
+
+    // Include the current weight in the second group
+    ll diff2 = minWeightDifference(idx - 1, currDiff, totalWeight, weights);
+
+    return min(diff1, diff2);
+}
 
 int main()
 {
-   int n;
-   cin>>n;
-   vector<int> v(n);
-   for(int i=0; i<n; i++){
-    cin>>v[i];
-   }
-   int i=0;
-   int j=n-1;
-    int sum1 = 0, sum2 =0;
-    sort(v.begin(),v.end());
-    while(i<j){
-        sum1 += v[i] + v[j];
-        sum2 += v[i+1] + v[j-1];
+    ll n;
+    cin >> n;
 
-        i++;
-        j--;
-    }
-    if (sum1 > sum2)
+    vector<ll> weights(n);
+    for (ll i = 0; i < n; ++i)
     {
-        sum2 += v[n / 2];
+        cin >> weights[i];
     }
-    else
+
+    ll totalWeight = 0;
+    for (ll weight : weights)
     {
-        sum1 += v[n / 2];
+        totalWeight += weight;
     }
-    cout<<abs(sum1-sum2)<<endl;
+
+    ll result = minWeightDifference(n, 0, totalWeight, weights);
+    cout << result << endl;
+
     return 0;
 }
